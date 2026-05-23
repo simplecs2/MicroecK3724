@@ -108,8 +108,7 @@ function loadQuestion() {
   if (selectedAnswer) {
     const buttons = document.querySelectorAll(".option-button");
     buttons.forEach((button) => {
-      const cleanText = button.innerText.replace(/^[Р°-СЏС‘a-z]\)\s*/i, "").trim();
-      if (cleanText === selectedAnswer) {
+      if (button.innerText === selectedAnswer) {
         button.classList.add("selected"); // Highlight the selected answer
       }
     });
@@ -125,8 +124,7 @@ function selectOption(button) {
   const buttons = document.querySelectorAll(".option-button");
   buttons.forEach((btn) => btn.classList.remove("selected")); // Remove selection from all buttons
   button.classList.add("selected"); // Select the clicked button
-  // Strip the variant letter prefix (e.g. "Р°) ") before storing
-  userAnswers[currentQuestionIndex] = button.innerText.replace(/^[Р°-СЏС‘a-z]\)\s*/i, "").trim();
+  userAnswers[currentQuestionIndex] = button.innerText; // Store the selected answer
 }
 
 // Answer a question
