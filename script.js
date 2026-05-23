@@ -96,11 +96,7 @@ function loadQuestion() {
 
   // Add variant letters (Р°, Р±, РІ, Рі) to the options
   const variantLetters = ["Р°", "Р±", "РІ", "Рі"];
-  const optionsHtml = question.options.map((option, index) => `
-    <div class="option-button ${document.body.classList.contains('night') ? 'night' : 'day'}" onclick="selectOption(this)">
-      ${variantLetters[index]}) ${option}
-    </div>
-  `).join(""); // Create HTML for the options
+  const optionsHtml = question.options.map((option, index) => `<div class="option-button ${document.body.classList.contains('night') ? 'night' : 'day'}" onclick="selectOption(this)" data-answer="${option.replace(/"/g, '&quot;')}">${variantLetters[index]}) ${option}</div>`).join(""); // Create HTML for the options
   document.getElementById("options").innerHTML = optionsHtml; // Display the options
 
   // Highlight selected answer if any
@@ -108,9 +104,8 @@ function loadQuestion() {
   if (selectedAnswer) {
     const buttons = document.querySelectorAll(".option-button");
     buttons.forEach((button) => {
-      const cleanText = button.innerText.replace(/^[Р°-СЏС‘a-z]\)\s*/i, "").trim();
-      if (cleanText === selectedAnswer) {
-        button.classList.add("selected"); // Highlight the selected answer
+      if (button.dataset.answer === selectedAnswer) {
+        button.classList.add("selected");
       }
     });
   }
@@ -123,10 +118,10 @@ function loadQuestion() {
 // Select an option
 function selectOption(button) {
   const buttons = document.querySelectorAll(".option-button");
-  buttons.forEach((btn) => btn.classList.remove("selected")); // Remove selection from all buttons
-  button.classList.add("selected"); // Select the clicked button
-  // Strip the variant letter prefix (e.g. "Р°) ") before storing
-  userAnswers[currentQuestionIndex] = button.innerText.replace(/^[Р°-СЏС‘a-z]\)\s*/i, "").trim();
+  buttons.forEach((btn) => btn.classList.remove("selected"));
+  button.classList.add("selected");
+  // Use data-answer attribute вЂ” clean option text, no prefix
+  userAnswers[currentQuestionIndex] = button.dataset.answer;
 }
 
 // Answer a question
