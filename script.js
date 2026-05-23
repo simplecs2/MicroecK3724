@@ -44,7 +44,7 @@ function shuffleArray(array) {
 // Start the test with all questions
 function startTest() {
   username = document.getElementById("username").value.trim(); // Get the username
-  if (!username) return alert("Пожалуйста, введите имя пользователя."); // Alert if username is empty
+  if (!username) return alert("РџРѕР¶Р°Р»СѓР№СЃС‚Р°, РІРІРµРґРёС‚Рµ РёРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ."); // Alert if username is empty
 
   document.getElementById("login-screen").style.display = "none"; // Hide the login screen
   document.getElementById("test-screen").style.display = "block"; // Show the test screen
@@ -55,7 +55,7 @@ function startTest() {
 // Start the test with 40 random questions
 function startRandomTest() {
   username = document.getElementById("username").value.trim(); // Get the username
-  if (!username) return alert("Пожалуйста, введите имя пользователя."); // Alert if username is empty
+  if (!username) return alert("РџРѕР¶Р°Р»СѓР№СЃС‚Р°, РІРІРµРґРёС‚Рµ РёРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ."); // Alert if username is empty
 
   // Select 25 random questions
   const randomQuestions = shuffleArray(questions).slice(0, 25);
@@ -94,8 +94,8 @@ function loadQuestion() {
   document.getElementById("question").innerText = question.text; // Display the question text
   document.getElementById("question-counter").innerText = `${currentQuestionIndex + 1}/${questions.length}`; // Update the question counter
 
-  // Add variant letters (а, б, в, г) to the options
-  const variantLetters = ["а", "б", "в", "г"];
+  // Add variant letters (Р°, Р±, РІ, Рі) to the options
+  const variantLetters = ["Р°", "Р±", "РІ", "Рі"];
   const optionsHtml = question.options.map((option, index) => `
     <div class="option-button ${document.body.classList.contains('night') ? 'night' : 'day'}" onclick="selectOption(this)">
       ${variantLetters[index]}) ${option}
@@ -108,7 +108,8 @@ function loadQuestion() {
   if (selectedAnswer) {
     const buttons = document.querySelectorAll(".option-button");
     buttons.forEach((button) => {
-      if (button.innerText === selectedAnswer) {
+      const cleanText = button.innerText.replace(/^[Р°-СЏС‘a-z]\)\s*/i, "").trim();
+      if (cleanText === selectedAnswer) {
         button.classList.add("selected"); // Highlight the selected answer
       }
     });
@@ -116,7 +117,7 @@ function loadQuestion() {
 
   // Update buttons
   const isLastQuestion = currentQuestionIndex === questions.length - 1;
-  document.getElementById("answer-btn").innerText = isLastQuestion ? "Завершить тестирование" : "Ответить"; // Update the button text
+  document.getElementById("answer-btn").innerText = isLastQuestion ? "Р—Р°РІРµСЂС€РёС‚СЊ С‚РµСЃС‚РёСЂРѕРІР°РЅРёРµ" : "РћС‚РІРµС‚РёС‚СЊ"; // Update the button text
 }
 
 // Select an option
@@ -124,12 +125,13 @@ function selectOption(button) {
   const buttons = document.querySelectorAll(".option-button");
   buttons.forEach((btn) => btn.classList.remove("selected")); // Remove selection from all buttons
   button.classList.add("selected"); // Select the clicked button
-  userAnswers[currentQuestionIndex] = button.innerText; // Store the selected answer
+  // Strip the variant letter prefix (e.g. "Р°) ") before storing
+  userAnswers[currentQuestionIndex] = button.innerText.replace(/^[Р°-СЏС‘a-z]\)\s*/i, "").trim();
 }
 
 // Answer a question
 function answerQuestion() {
-  if (!userAnswers[currentQuestionIndex]) return alert("Пожалуйста, выберите ответ."); // Alert if no answer is selected
+  if (!userAnswers[currentQuestionIndex]) return alert("РџРѕР¶Р°Р»СѓР№СЃС‚Р°, РІС‹Р±РµСЂРёС‚Рµ РѕС‚РІРµС‚."); // Alert if no answer is selected
 
   if (currentQuestionIndex < questions.length - 1) {
     currentQuestionIndex++; // Move to the next question
@@ -156,7 +158,7 @@ function showResults() {
   const correctAnswers = userAnswers.filter((answer, index) => answer === questions[index].correctAnswer).length; // Calculate the number of correct answers
   document.getElementById("test-screen").style.display = "none"; // Hide the test screen
   document.getElementById("results-screen").style.display = "block"; // Show the results screen
-  document.getElementById("score").innerText = `Вы ответили правильно на ${correctAnswers} из ${questions.length} вопросов.`; // Display the score
+  document.getElementById("score").innerText = `Р’С‹ РѕС‚РІРµС‚РёР»Рё РїСЂР°РІРёР»СЊРЅРѕ РЅР° ${correctAnswers} РёР· ${questions.length} РІРѕРїСЂРѕСЃРѕРІ.`; // Display the score
 
   // Save results to localStorage
   saveResults(correctAnswers);
@@ -180,8 +182,8 @@ function showDetailedResults() {
     const detailedResultsHtml = questions.map((question, index) => `
       <div class="result-item ${document.body.classList.contains('night') ? 'night' : 'day'}">
         <h3>${question.text}</h3>
-        <p><strong>Правильный ответ:</strong> <span class="correct-answer ${document.body.classList.contains('night') ? 'night' : 'day'}">${question.correctAnswer}</span></p>
-        <p><strong>Ваш ответ:</strong> <span class="${userAnswers[index] === question.correctAnswer ? "correct-answer" : "wrong-answer"} ${document.body.classList.contains('night') ? 'night' : 'day'}">${userAnswers[index] || "Пропущено"}</span></p>
+        <p><strong>РџСЂР°РІРёР»СЊРЅС‹Р№ РѕС‚РІРµС‚:</strong> <span class="correct-answer ${document.body.classList.contains('night') ? 'night' : 'day'}">${question.correctAnswer}</span></p>
+        <p><strong>Р’Р°С€ РѕС‚РІРµС‚:</strong> <span class="${userAnswers[index] === question.correctAnswer ? "correct-answer" : "wrong-answer"} ${document.body.classList.contains('night') ? 'night' : 'day'}">${userAnswers[index] || "РџСЂРѕРїСѓС‰РµРЅРѕ"}</span></p>
       </div>
     `).join(""); // Create HTML for detailed results
     detailedResults.innerHTML = detailedResultsHtml; // Display detailed results
@@ -200,17 +202,17 @@ function showLeaderboard() {
       <table class="leaderboard-table ${document.body.classList.contains('night') ? 'night' : 'day'}">
         <thead>
           <tr>
-            <th>Имя</th>
-            <th>Результат</th>
-            <th>Время</th>
-            <th>Статус</th>
+            <th>РРјСЏ</th>
+            <th>Р РµР·СѓР»СЊС‚Р°С‚</th>
+            <th>Р’СЂРµРјСЏ</th>
+            <th>РЎС‚Р°С‚СѓСЃ</th>
           </tr>
         </thead>
         <tbody>
           ${results.map((result) => `
             <tr>
               <td>${result.username}</td>
-              <td>${result.correctAnswers} из ${questions.length}</td>
+              <td>${result.correctAnswers} РёР· ${questions.length}</td>
               <td>${result.timeTaken}</td>
               <td>${result.status}</td>
             </tr>
