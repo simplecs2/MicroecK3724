@@ -94,13 +94,9 @@ function loadQuestion() {
   document.getElementById("question").innerText = question.text; // Display the question text
   document.getElementById("question-counter").innerText = `${currentQuestionIndex + 1}/${questions.length}`; // Update the question counter
 
-  // Add variant letters (Р°, Р±, РІ, Рі) to the options
-  const variantLetters = ["Р°", "Р±", "РІ", "Рі"];
-  const optionsHtml = question.options.map((option, index) => `
-    <div class="option-button ${document.body.classList.contains('night') ? 'night' : 'day'}" onclick="selectOption(this)">
-      ${variantLetters[index]}) ${option}
-    </div>
-  `).join(""); // Create HTML for the options
+  // Add variant letters (A, B, C, D) to the options
+  const variantLetters = ["A", "B", "C", "D"];
+  const optionsHtml = question.options.map((option, index) => `<div class="option-button ${document.body.classList.contains('night') ? 'night' : 'day'}" onclick="selectOption(this)" data-answer="${option.replace(/"/g, '&quot;')}">${variantLetters[index]}) ${option}</div>`).join(""); // Create HTML for the options
   document.getElementById("options").innerHTML = optionsHtml; // Display the options
 
   // Highlight selected answer if any
@@ -108,7 +104,7 @@ function loadQuestion() {
   if (selectedAnswer) {
     const buttons = document.querySelectorAll(".option-button");
     buttons.forEach((button) => {
-      if (button.innerText === selectedAnswer) {
+      if (button.dataset.answer === selectedAnswer) {
         button.classList.add("selected"); // Highlight the selected answer
       }
     });
@@ -124,7 +120,7 @@ function selectOption(button) {
   const buttons = document.querySelectorAll(".option-button");
   buttons.forEach((btn) => btn.classList.remove("selected")); // Remove selection from all buttons
   button.classList.add("selected"); // Select the clicked button
-  userAnswers[currentQuestionIndex] = button.innerText; // Store the selected answer
+  userAnswers[currentQuestionIndex] = button.dataset.answer; // Store clean answer text
 }
 
 // Answer a question
